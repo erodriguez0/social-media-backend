@@ -1,6 +1,7 @@
 import { createMiddleware } from 'hono/factory';
 
 import { UnauthenticatedException } from '@/core/exceptions/http';
+
 import { HonoEnv } from '@/core/types/hono';
 
 import { auth } from '@/features/auth/auth';

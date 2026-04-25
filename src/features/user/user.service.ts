@@ -1,11 +1,16 @@
-import { User } from '@/generated/prisma/client';
+import { prisma } from '@/core/lib/prisma';
 
 import { NotFoundException } from '@/core/exceptions/http';
-import { prisma } from '@/core/lib/prisma';
 
 import { auth } from '@/features/auth/auth';
 
 export const userService = {
+  async getUsers(page = 1, limit = 10) {
+    const users = await prisma.user.findMany({});
+
+    return users;
+  },
+
   async getUser(username: string) {
     const user = await prisma.user.findUnique({
       where: {

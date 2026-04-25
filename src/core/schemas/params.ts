@@ -2,6 +2,6 @@ import { z } from '@hono/zod-openapi';
 
 import { username } from '@/core/schemas/common';
 
-export const UsernameParamsSchema = z.object({
+export const UsernameParamSchema = z.object({
   username: username,
 });

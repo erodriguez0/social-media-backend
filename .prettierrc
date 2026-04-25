@@ -7,20 +7,20 @@
   "arrowParens": "always",
   "endOfLine": "lf",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderCaseInsensitive": true,
+  "importOrderGroupNamespaceSpecifiers": true,
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
     "^@/generated/(.*)$",
     "^@/app",
-    "^@/core/(.*)$",
     "^@/core/lib/(.*)$",
     "^@/core/exceptions/(.*)$",
     "^@/core/schemas/(.*)$",
     "^@/core/middleware/(.*)$",
+    "^@/core/(.*)$",
     "^@/features/(.*)$",
     "^[./]"
-  ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
-  "importOrderCaseInsensitive": true,
-  "importOrderGroupNamespaceSpecifiers": true
+  ]
 }

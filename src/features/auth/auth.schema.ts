@@ -1,7 +1,6 @@
 import { z } from '@hono/zod-openapi';
 
 import { password, username } from '@/core/schemas/common';
-import { user } from '@/core/schemas/user';
 
 export const SignUpSchema = z
   .object({
@@ -20,11 +19,5 @@ export const SignInSchema = z.object({
   password: password,
 });
 
-export const AuthResponseSchema = z.object({
-  token: z.string(),
-  user: user,
-});
-
 export type SignUpInput = z.infer<typeof SignUpSchema>;
 export type SignInInput = z.infer<typeof SignInSchema>;
-export type AuthResponse = z.infer<typeof AuthResponseSchema>;

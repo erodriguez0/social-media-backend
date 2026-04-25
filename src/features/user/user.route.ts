@@ -1,23 +1,34 @@
 import { Hono } from 'hono';
 
-import { InternalServerException } from '@/core/exceptions/http';
 import { customZValidator } from '@/core/lib/validator';
+
+import { InternalServerException } from '@/core/exceptions/http';
+
+import { PaginationParamSchema } from '@/core/schemas/pagination';
+import { UsernameParamSchema } from '@/core/schemas/params';
+
 import { authMiddleware } from '@/core/middleware/auth';
 import { isSelf } from '@/core/middleware/is-self';
-import { UsernameParamsSchema } from '@/core/schemas/params';
 
-import { ChangeUsernameSchema, UserResponseSchema } from '@/features/user/user.schema';
+import { ChangeUsernameSchema } from '@/features/user/user.schema';
 import { userService } from '@/features/user/user.service';
 
 const userRoute = new Hono();
 
-userRoute.get('/:username', customZValidator('param', UsernameParamsSchema), async (c) => {
+userRoute.get('/', customZValidator('param', PaginationParamSchema), async (c) => {
+  const params = c.req.valid('param');
+
+  const users = await userService.getUsers(params.page, params.limit);
+
+  return c.json({ users }, 200);
+});
+
+userRoute.get('/:username', customZValidator('param', UsernameParamSchema), async (c) => {
   const params = c.req.valid('param');
 
   const user = await userService.getUser(params.username);
-  const parsedUser = UserResponseSchema.parse({ user });
 
-  return c.json(parsedUser, 200);
+  return c.json(user, 200);
 });
 
 userRoute.patch(

@@ -1,6 +1,7 @@
 import { MiddlewareHandler } from 'hono';
 
 import { UnauthorizedException } from '@/core/exceptions/http';
+
 import type { HonoEnv } from '@/core/types/hono';
 
 export const isSelf: MiddlewareHandler<HonoEnv> = async (c, next) => {
