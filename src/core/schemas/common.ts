@@ -10,6 +10,19 @@ export const password = z.string().min(8, { error: 'Password must be at least 8 
 
 export const image = z.url({ error: 'Invalid image URL' }).nullish();
 
+export const UserSchema = z.object({
+  id: z.cuid(),
+  username: username,
+  displayUsername: username,
+  image: image,
+  role: z.string().nullish(),
+  banned: z.boolean().nullish(),
+  banReason: z.string().nullish(),
+  banExpires: z.date().nullish(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
 export const subredditName = z
   .string()
   .min(3, { error: 'Subreddit must be at least 3 characters' })

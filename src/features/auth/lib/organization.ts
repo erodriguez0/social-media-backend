@@ -9,8 +9,21 @@ export const orgConfig = {
   schema: {
     organization: {
       modelName: 'subreddit',
+      additionalFields: {
+        creatorId: {
+          type: 'string',
+          input: false,
+          required: false,
+          references: {
+            model: 'user',
+            field: 'id',
+            onDelete: 'set null',
+          },
+        },
+      },
     },
     member: {
+      modelName: 'subscription',
       fields: {
         organizationId: 'subredditId',
       },

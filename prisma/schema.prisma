@@ -10,12 +10,12 @@ datasource db {
 model User {
   id              String    @id @default(cuid())
   name            String
-  email           String
+  email           String    @unique
   emailVerified   Boolean   @default(false) @map("email_verified")
   image           String?
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
-  username        String
+  username        String    @unique
   displayUsername String?   @map("display_username")
   sessions        Session[]
   accounts        Account[]
@@ -25,18 +25,17 @@ model User {
   banReason  String?   @map("ban_reason")
   banExpires DateTime? @map("ban_expires")
 
-  members     Member[]
-  invitations Invitation[]
+  subreddits    Subreddit[]
+  subscriptions Subscription[]
+  invitations   Invitation[]
 
-  @@unique([email])
-  @@unique([username])
   @@map("user")
 }
 
 model Session {
   id        String   @id @default(cuid())
   expiresAt DateTime @map("expires_at")
-  token     String
+  token     String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   ipAddress String?  @map("ip_address")
@@ -47,7 +46,6 @@ model Session {
   impersonatedBy       String? @map("impersonated_by")
   activeOrganizationId String? @map("active_organization_id")
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
@@ -85,36 +83,36 @@ model Verification {
 }
 
 model Subreddit {
-  id          String       @id @default(cuid())
-  name        String       @unique
+  id          String         @id @default(cuid())
+  name        String
   slug        String
   logo        String?
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
+  createdAt   DateTime       @map("created_at")
   metadata    String?
-  members     Member[]
+  creatorId   String?        @map("creator_id")
+  creator     User?          @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  members     Subscription[]
   invitations Invitation[]
 
   @@unique([slug])
   @@map("subreddit")
 }
 
-model Member {
+model Subscription {
   id          String    @id @default(cuid())
   subredditId String    @map("subreddit_id")
   subreddit   Subreddit @relation(fields: [subredditId], references: [id], onDelete: Cascade)
   userId      String    @map("user_id")
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   role        String    @default("member")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  createdAt   DateTime  @map("created_at")
   banned      Boolean?  @default(false)
   banReason   String?   @map("ban_reason")
   banExpires  DateTime? @map("ban_expires")
 
   @@index([subredditId])
   @@index([userId])
-  @@map("member")
+  @@map("subscription")
 }
 
 model Invitation {
@@ -127,7 +125,7 @@ model Invitation {
   expiresAt   DateTime  @map("expires_at")
   createdAt   DateTime  @default(now()) @map("created_at")
   inviterId   String    @map("inviter_id")
-  user        User      @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  inviter     User      @relation(fields: [inviterId], references: [id], onDelete: Cascade)
 
   @@index([subredditId])
   @@index([email])
