@@ -6,8 +6,6 @@ import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { APIException } from '@/core/exceptions/http';
 
 export const errorHandler: ErrorHandler = (err, c) => {
-  console.log(err);
-
   if (err instanceof APIError) {
     return c.json({ message: err.message }, err.statusCode as ContentfulStatusCode);
   }
