@@ -28,3 +28,22 @@ export const subredditName = z
   .min(3, { error: 'Subreddit must be at least 3 characters' })
   .max(20, { error: 'Subreddit must be at most 20 characters' })
   .regex(/^[a-zA-Z0-9_]+$/, { error: 'Subreddit can only be letters, number, and underscores' });
+
+export const SubredditSchema = z.object({
+  id: z.cuid(),
+  name: subredditName,
+  slug: subredditName,
+  logo: image,
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const MemberSchema = z.object({
+  userId: z.cuid(),
+  subredditId: z.cuid(),
+  role: z.string(),
+  createdAt: z.date(),
+  banned: z.boolean().nullish(),
+  banReason: z.string().nullish(),
+  banExpires: z.date().nullish(),
+});

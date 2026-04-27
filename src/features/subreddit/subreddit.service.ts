@@ -4,10 +4,11 @@ import { prisma } from '@/core/lib/prisma';
 
 import { ConflictException, NotFoundException } from '@/core/exceptions/http';
 
+import { auth } from '@/features/auth/lib/auth';
 import { CreateSubredditInput } from '@/features/subreddit/subreddit.schema';
 
 export const subredditService = {
-  async createSubreddit(input: CreateSubredditInput, user: User) {
+  async createSubreddit(input: CreateSubredditInput, user: User, headers: Headers) {
     const subredditExists = await prisma.subreddit.findFirst({
       where: {
         name: {
@@ -24,16 +25,12 @@ export const subredditService = {
       throw new ConflictException('Subreddit already exists');
     }
 
-    const subreddit = await prisma.subreddit.create({
-      data: {
+    const subreddit = await auth.api.createOrganization({
+      body: {
         name: input.name,
-        foundedById: user.id,
-      },
-      include: {
-        foundedBy: true,
-      },
-      omit: {
-        foundedById: true,
+        slug: input.name.toLowerCase(),
+        logo: input.logo || undefined,
+        userId: user.id,
       },
     });
 
@@ -49,10 +46,16 @@ export const subredditService = {
         },
       },
       include: {
-        foundedBy: true,
+        members: {
+          where: {
+            user: {
+              banned: false,
+            },
+          },
+        },
       },
       omit: {
-        foundedById: true,
+        creatorId: true,
       },
     });
 

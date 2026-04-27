@@ -15,6 +15,7 @@ CREATE TABLE "subreddit" (
     "slug" TEXT NOT NULL,
     "logo" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL,
     "metadata" TEXT,
     "creator_id" TEXT,
 

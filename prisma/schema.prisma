@@ -85,16 +85,16 @@ model Verification {
 model Subreddit {
   id          String         @id @default(cuid())
   name        String
-  slug        String
+  slug        String         @unique
   logo        String?
   createdAt   DateTime       @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
   metadata    String?
   creatorId   String?        @map("creator_id")
   creator     User?          @relation(fields: [creatorId], references: [id], onDelete: SetNull)
   members     Subscription[]
   invitations Invitation[]
 
-  @@unique([slug])
   @@map("subreddit")
 }
 

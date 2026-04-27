@@ -1,5 +1,9 @@
 import type { OrganizationOptions } from 'better-auth/plugins';
 
+import { prisma } from '@/core/lib/prisma';
+
+import { UnauthorizedException } from '@/core/exceptions/http';
+
 import { ac, roles } from '@/features/auth/lib/access';
 
 export const orgConfig = {
@@ -19,6 +23,11 @@ export const orgConfig = {
             field: 'id',
             onDelete: 'set null',
           },
+        },
+        updatedAt: {
+          type: 'date',
+          input: false,
+          required: true,
         },
       },
     },
@@ -51,6 +60,19 @@ export const orgConfig = {
     },
   },
   organizationHooks: {
-    beforeAddMember: async ({ member, user, organization }) => {},
+    beforeCreateOrganization: async (data) => {
+      const user = data.user;
+
+      if (!user) {
+        throw new UnauthorizedException();
+      }
+
+      return {
+        data: {
+          ...data,
+          creatorId: user.id,
+        },
+      };
+    },
   },
 } satisfies OrganizationOptions;
