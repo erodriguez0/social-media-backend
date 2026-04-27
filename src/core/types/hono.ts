@@ -1,4 +1,4 @@
-import { auth, AuthType } from '@/features/auth/auth';
+import { auth, AuthType } from '@/features/auth/lib/auth';
 
 export type HonoEnv = {
   Variables: {} & AuthType;

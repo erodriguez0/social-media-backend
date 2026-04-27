@@ -2,7 +2,7 @@ import { prisma } from '@/core/lib/prisma';
 
 import { NotFoundException } from '@/core/exceptions/http';
 
-import { auth } from '@/features/auth/auth';
+import { auth } from '@/features/auth/lib/auth';
 
 export const userService = {
   async getUsers(page = 1, limit = 10) {

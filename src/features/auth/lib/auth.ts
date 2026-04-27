@@ -1,8 +1,10 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { bearer, username } from 'better-auth/plugins';
+import { admin, bearer, organization, username } from 'better-auth/plugins';
 
 import { prisma } from '@/core/lib/prisma';
+
+import { orgConfig } from '@/features/auth/lib/organization';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -30,7 +32,7 @@ export const auth = betterAuth({
     },
     disableOriginCheck: true,
   },
-  plugins: [bearer(), username()],
+  plugins: [bearer(), username(), admin(), organization(orgConfig)],
   trustedOrigins: ['http://localhost:5000'],
 });
 

@@ -2,9 +2,9 @@ import { Hono } from 'hono';
 
 import { customZValidator } from '@/core/lib/validator';
 
-import { auth } from '@/features/auth/auth';
 import { SignInSchema, SignUpSchema } from '@/features/auth/auth.schema';
 import { authService } from '@/features/auth/auth.service';
+import { auth } from '@/features/auth/lib/auth';
 
 const authRoute = new Hono();
 

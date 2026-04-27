@@ -1,5 +1,5 @@
-import { auth } from '@/features/auth/auth';
 import { SignInInput, SignUpInput } from '@/features/auth/auth.schema';
+import { auth } from '@/features/auth/lib/auth';
 
 export const authService = {
   async signUp(data: SignUpInput) {

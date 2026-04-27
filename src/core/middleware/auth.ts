@@ -4,7 +4,7 @@ import { UnauthenticatedException } from '@/core/exceptions/http';
 
 import { HonoEnv } from '@/core/types/hono';
 
-import { auth } from '@/features/auth/auth';
+import { auth } from '@/features/auth/lib/auth';
 
 export const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
   const session = await auth.api.getSession({
