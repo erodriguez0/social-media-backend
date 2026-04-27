@@ -59,8 +59,14 @@ export class NotFoundException extends HTTPException {
   }
 }
 
+export class ConflictException extends HTTPException {
+  constructor(message?: string) {
+    super(409, { message: message || 'Conflict' });
+  }
+}
+
 export class InternalServerException extends HTTPException {
   constructor(message?: string) {
-    super(404, { message: message || 'Internal server error' });
+    super(500, { message: message || 'Internal server error' });
   }
 }
