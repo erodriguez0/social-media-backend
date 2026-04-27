@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 
 import { errorHandler } from '@/core/middleware/error-handler';
+
 import { HonoEnv } from '@/core/types/hono';
 
 import authRoute from '@/features/auth/auth.route';
