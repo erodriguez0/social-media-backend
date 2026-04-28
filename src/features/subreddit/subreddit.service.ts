@@ -8,7 +8,7 @@ import { auth } from '@/features/auth/lib/auth';
 import { CreateSubredditInput } from '@/features/subreddit/subreddit.schema';
 
 export const subredditService = {
-  async createSubreddit(input: CreateSubredditInput, user: User, headers: Headers) {
+  async createSubreddit(input: CreateSubredditInput, user: User) {
     const subredditExists = await prisma.subreddit.findFirst({
       where: {
         name: {
@@ -37,7 +37,7 @@ export const subredditService = {
     return subreddit;
   },
 
-  async getSubreddit(subredditName: string) {
+  async getSubreddit(subredditName: string, userId?: string) {
     const subreddit = await prisma.subreddit.findFirst({
       where: {
         name: {
@@ -46,11 +46,15 @@ export const subredditService = {
         },
       },
       include: {
+        creator: true,
         members: {
           where: {
-            user: {
-              banned: false,
-            },
+            userId: userId,
+          },
+        },
+        _count: {
+          select: {
+            members: true,
           },
         },
       },

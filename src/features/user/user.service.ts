@@ -25,14 +25,16 @@ export const userService = {
     return user;
   },
 
-  async changeUsername(username: string, headers: Headers) {
-    const res = await auth.api.updateUser({
+  async changeUsername(username: string, userId: string) {
+    const res = await auth.api.adminUpdateUser({
       body: {
-        displayUsername: username,
-        username: username,
-        name: username,
+        userId: userId,
+        data: {
+          displayUsername: username,
+          username: username,
+          name: username,
+        },
       },
-      headers: headers,
     });
 
     return res;

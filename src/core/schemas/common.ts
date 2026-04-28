@@ -32,7 +32,6 @@ export const subredditName = z
 export const SubredditSchema = z.object({
   id: z.cuid(),
   name: subredditName,
-  slug: subredditName,
   logo: image,
   createdAt: z.date(),
   updatedAt: z.date(),

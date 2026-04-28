@@ -38,11 +38,11 @@ userRoute.patch(
   customZValidator('json', ChangeUsernameSchema),
   async (c) => {
     const body = c.req.valid('json');
-    const headers = c.req.raw.headers;
+    const user = c.var.user!;
 
-    const res = await userService.changeUsername(body.username, headers);
+    const res = await userService.changeUsername(body.username, user.id);
 
-    if (!res.status) {
+    if (!res) {
       throw new InternalServerException();
     }
 
