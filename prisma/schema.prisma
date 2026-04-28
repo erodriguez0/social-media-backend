@@ -84,7 +84,7 @@ model Verification {
 
 model Subreddit {
   id          String         @id @default(cuid())
-  name        String
+  name        String         @unique
   slug        String         @unique
   logo        String?
   createdAt   DateTime       @map("created_at")
@@ -110,6 +110,7 @@ model Subscription {
   banReason   String?   @map("ban_reason")
   banExpires  DateTime? @map("ban_expires")
 
+  @@unique([subredditId, userId])
   @@index([subredditId])
   @@index([userId])
   @@map("subscription")

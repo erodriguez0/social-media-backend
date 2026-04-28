@@ -2,7 +2,7 @@ import { User } from 'better-auth';
 
 import { prisma } from '@/core/lib/prisma';
 
-import { ConflictException, NotFoundException } from '@/core/exceptions/http';
+import { BadRequestException, ConflictException, NotFoundException } from '@/core/exceptions/http';
 
 import { auth } from '@/features/auth/lib/auth';
 import { CreateSubredditInput } from '@/features/subreddit/subreddit.schema';
@@ -68,5 +68,74 @@ export const subredditService = {
     }
 
     return subreddit;
+  },
+
+  async subscribe(subredditName: string, userId: string) {
+    const subreddit = await prisma.subreddit.findFirst({
+      where: {
+        name: subredditName,
+      },
+      select: {
+        id: true,
+        creator: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!subreddit) {
+      throw new NotFoundException('Subreddit');
+    }
+
+    const sub = await auth.api.addMember({
+      body: {
+        organizationId: subreddit.id,
+        userId: userId,
+        role: subreddit.creator?.id === userId ? 'owner' : 'member',
+      },
+    });
+
+    return sub;
+  },
+
+  async unsubscribe(subredditName: string, userId: string) {
+    const subreddit = await prisma.subreddit.findFirst({
+      where: {
+        name: subredditName,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!subreddit) {
+      throw new NotFoundException('Subreddit');
+    }
+
+    const subExists = await prisma.subscription.findUnique({
+      where: {
+        subredditId_userId: {
+          subredditId: subreddit.id,
+          userId: userId,
+        },
+      },
+    });
+
+    if (!subExists) {
+      throw new BadRequestException('Subscription does not exist');
+    }
+
+    const unsub = await prisma.subscription.delete({
+      where: {
+        subredditId_userId: {
+          subredditId: subreddit.id,
+          userId: userId,
+        },
+      },
+    });
+
+    return unsub;
   },
 };

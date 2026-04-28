@@ -46,3 +46,18 @@ export const MemberSchema = z.object({
   banReason: z.string().nullish(),
   banExpires: z.date().nullish(),
 });
+
+export const SubscriptionSchema = z
+  .object({
+    userId: z.cuid(),
+    organizationId: z.cuid(),
+    role: z.string(),
+    createdAt: z.date(),
+    banned: z.boolean().nullish(),
+    banReason: z.string().nullish(),
+    banExpires: z.date().nullish(),
+  })
+  .transform(({ organizationId, ...data }) => ({
+    subredditId: organizationId,
+    ...data,
+  }));

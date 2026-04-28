@@ -2,7 +2,9 @@ import { Hono } from 'hono';
 
 import { customZValidator } from '@/core/lib/validator';
 
-import { SubredditSchema } from '@/core/schemas/common';
+import { BadRequestException } from '@/core/exceptions/http';
+
+import { MemberSchema, SubredditSchema, SubscriptionSchema } from '@/core/schemas/common';
 import { SubredditParamSchema } from '@/core/schemas/params';
 
 import { authMiddleware } from '@/core/middleware/auth';
@@ -45,6 +47,35 @@ subredditRoute.get(
     const data = GetSubredditResponseSchema.parse(res);
 
     return c.json(data, 200);
+  }
+);
+
+subredditRoute.post(
+  '/:subreddit/subscribe',
+  authMiddleware,
+  customZValidator('param', SubredditParamSchema),
+  async (c) => {
+    const { subreddit } = c.req.valid('param');
+    const user = c.var.user!;
+
+    const subscription = await subredditService.subscribe(subreddit, user.id);
+    const data = SubscriptionSchema.parse(subscription);
+
+    return c.json(data, 201);
+  }
+);
+
+subredditRoute.delete(
+  '/:subreddit/unsubscribe',
+  authMiddleware,
+  customZValidator('param', SubredditParamSchema),
+  async (c) => {
+    const { subreddit } = c.req.valid('param');
+    const user = c.var.user!;
+
+    await subredditService.unsubscribe(subreddit, user.id);
+
+    return c.json({ success: true }, 200);
   }
 );
 
