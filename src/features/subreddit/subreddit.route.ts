@@ -2,9 +2,7 @@ import { Hono } from 'hono';
 
 import { customZValidator } from '@/core/lib/validator';
 
-import { BadRequestException } from '@/core/exceptions/http';
-
-import { MemberSchema, SubredditSchema, SubscriptionSchema } from '@/core/schemas/common';
+import { SubredditSchema, SubscriptionSchema } from '@/core/schemas/common';
 import { SubredditParamSchema } from '@/core/schemas/params';
 
 import { authMiddleware } from '@/core/middleware/auth';

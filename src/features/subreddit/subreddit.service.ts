@@ -2,7 +2,7 @@ import { User } from 'better-auth';
 
 import { prisma } from '@/core/lib/prisma';
 
-import { BadRequestException, ConflictException, NotFoundException } from '@/core/exceptions/http';
+import { ConflictException, NotFoundException } from '@/core/exceptions/http';
 
 import { auth } from '@/features/auth/lib/auth';
 import { CreateSubredditInput } from '@/features/subreddit/subreddit.schema';
@@ -124,7 +124,7 @@ export const subredditService = {
     });
 
     if (!subExists) {
-      throw new BadRequestException('Subscription does not exist');
+      throw new NotFoundException('Subscription');
     }
 
     const unsub = await prisma.subscription.delete({
